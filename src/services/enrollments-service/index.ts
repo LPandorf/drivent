@@ -12,16 +12,36 @@ async function getAddressFromCEP(cep: string) {
     throw notFoundError();
   }
 
-  /* if (result.data.erro === true || result.status === 400) {
+  if (result.status === 400) {
     throw invalidDataError([result.statusText]);
-  } */
+  }
   if (result.data.erro) {
     throw invalidCepError;
   }
 
-  const { bairro, uf, localidade, complemento, logradouro } = result.data;
+  //const { bairro, uf, localidade, complemento, logradouro } = result.data;
 
-  return { logradouro, complemento, bairro, cidade: localidade, uf };
+  type Address = {
+    logradouro: string;
+    complemento: string;
+    bairro: string;
+    localidade: string;
+    uf: string;
+  };
+
+  const object = async (params: Address) => {
+    return {
+      logradouro: params.logradouro || '',
+      complemento: params.complemento || '',
+      bairro: params.bairro || '',
+      cidade: params.localidade || '',
+      uf: params.uf || '',
+    };
+  };
+
+  const response = await object(result.data);
+
+  return response;
 }
 
 async function getOneWithAddressByUserId(userId: number): Promise<GetOneWithAddressByUserIdResult> {
