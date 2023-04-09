@@ -12,6 +12,10 @@ async function getAddressFromCEP(cep: string) {
     throw notFoundError();
   }
 
+  if (result.data.error === true || result.status === 400) {
+    throw invalidDataError([result.statusText]);
+  }
+
   const { bairro, localidade, uf, complemento, logradouro } = result.data;
 
   return { bairro, cidade: localidade, uf, complemento, logradouro };
