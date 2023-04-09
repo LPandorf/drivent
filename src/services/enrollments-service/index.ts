@@ -19,9 +19,9 @@ async function getAddressFromCEP(cep: string) {
     throw invalidCepError;
   }
 
-  //const { bairro, uf, localidade, complemento, logradouro } = result.data;
+  const { bairro, uf, localidade, complemento, logradouro } = result.data;
 
-  type Address = {
+  /*   type Address = {
     logradouro: string;
     complemento: string;
     bairro: string;
@@ -41,7 +41,8 @@ async function getAddressFromCEP(cep: string) {
 
   const response = await object(result.data);
 
-  return response;
+  return response; */
+  return { logradouro, complemento, bairro, cidade: localidade, uf };
 }
 
 async function getOneWithAddressByUserId(userId: number): Promise<GetOneWithAddressByUserIdResult> {
