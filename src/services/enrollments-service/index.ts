@@ -12,13 +12,13 @@ async function getAddressFromCEP(cep: string) {
     throw notFoundError();
   }
 
-  if (result.data.error === true || result.status === 400) {
+  if (result.data.erro === true || result.status === 400) {
     throw invalidDataError([result.statusText]);
   }
 
-  const { bairro, localidade, uf, complemento, logradouro } = result.data;
+  const { bairro, uf, localidade, complemento, logradouro } = result.data;
 
-  return { bairro, cidade: localidade, uf, complemento, logradouro };
+  return { logradouro, complemento, bairro, cidade: localidade, uf };
 }
 
 async function getOneWithAddressByUserId(userId: number): Promise<GetOneWithAddressByUserIdResult> {
@@ -48,9 +48,10 @@ type GetAddressResult = Omit<Address, 'createdAt' | 'updatedAt' | 'enrollmentId'
 async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollmentWithAddress) {
   const enrollment = exclude(params, 'address');
   const address = getAddressForUpsert(params.address);
+  const cep = address.cep.replace('-', '');
 
   try {
-    await getAddressFromCEP(address.cep);
+    await getAddressFromCEP(cep);
   } catch {
     throw invalidDataError(['invalid CEP']);
   }
