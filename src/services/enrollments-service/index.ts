@@ -29,13 +29,13 @@ async function getAddressFromCEP(cep: string) {
     uf: string;
   };
 
-  const object = async (params: Address) => {
+  const object = async (ad: Address) => {
     return {
-      logradouro: params.logradouro || '',
-      complemento: params.complemento || '',
-      bairro: params.bairro || '',
-      cidade: params.localidade || '',
-      uf: params.uf || '',
+      logradouro: ad.logradouro,
+      complemento: ad.complemento,
+      bairro: ad.bairro,
+      cidade: ad.localidade,
+      uf: ad.uf,
     };
   };
 
