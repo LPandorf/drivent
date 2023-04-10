@@ -1,4 +1,5 @@
 import { Address, Enrollment } from '@prisma/client';
+import { ViaCEPAddress } from './../../protocols';
 import { request } from '@/utils/request';
 import { invalidCepError, invalidDataError, notFoundError } from '@/errors';
 import addressRepository, { CreateAddressParams } from '@/repositories/address-repository';
@@ -16,9 +17,9 @@ async function getAddressFromCEP(cep: string) {
     throw invalidDataError([result.statusText]);
   }
 
-  const { bairro, uf, localidade, complemento, logradouro } = result.data;
+  const { bairro, uf, localidade: cidade, complemento, logradouro }: ViaCEPAddress = result.data;
 
-  return { logradouro, complemento, bairro, cidade: localidade, uf };
+  return { logradouro, complemento, bairro, cidade, uf };
 }
 
 async function getOneWithAddressByUserId(userId: number): Promise<GetOneWithAddressByUserIdResult> {
