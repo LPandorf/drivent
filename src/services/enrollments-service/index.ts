@@ -12,36 +12,12 @@ async function getAddressFromCEP(cep: string) {
     throw notFoundError();
   }
 
-  if (result.status === 400) {
+  if (result.data.erro === true || result.status === 400) {
     throw invalidDataError([result.statusText]);
-  }
-  if (result.data.erro) {
-    throw invalidCepError;
   }
 
   const { bairro, uf, localidade, complemento, logradouro } = result.data;
 
-  /*   type Address = {
-    logradouro: string;
-    complemento: string;
-    bairro: string;
-    localidade: string;
-    uf: string;
-  };
-
-  const object = async (ad: Address) => {
-    return {
-      logradouro: ad.logradouro,
-      complemento: ad.complemento,
-      bairro: ad.bairro,
-      cidade: ad.localidade,
-      uf: ad.uf,
-    };
-  };
-
-  const response = await object(result.data);
-
-  return response; */
   return { logradouro, complemento, bairro, cidade: localidade, uf };
 }
 

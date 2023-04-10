@@ -9,7 +9,7 @@ export async function getEnrollmentByUser(req: AuthenticatedRequest, res: Respon
   try {
     const enrollmentWithAddress = await enrollmentsService.getOneWithAddressByUserId(userId);
 
-    return res.sendStatus(httpStatus.OK).send(enrollmentWithAddress);
+    return res.status(httpStatus.OK).send(enrollmentWithAddress);
   } catch (error) {
     return res.sendStatus(httpStatus.NO_CONTENT);
   }
@@ -27,17 +27,16 @@ export async function postCreateOrUpdateEnrollment(req: AuthenticatedRequest, re
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
-//Record<string, string>
-type Cep = { cep: string };
+
 export async function getAddressFromCEP(req: AuthenticatedRequest, res: Response) {
-  const { cep } = req.query as Cep;
+  const { cep } = req.query as Record<string, string>;
 
   try {
     const address = await enrollmentsService.getAddressFromCEP(cep);
     res.status(httpStatus.OK).send(address);
   } catch (error) {
     if (error.name === 'NotFoundError') {
-      return res.send(httpStatus.NO_CONTENT);
+      return res.sendStatus(httpStatus.NO_CONTENT);
     }
   }
 }
